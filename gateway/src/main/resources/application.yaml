@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: wb-ims-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - AddResponseHeader=Access-Control-Allow-Origin, *
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        - id: wb-ims-login
+          uri: lb://wb-ims-login
+          predicates:
+            - Path=/wb-ims-login/**
+        - id: pixynote
+          uri: lb://pixynote
+          predicates:
+            - Path=/pixynote/**
+
+server:
+  port: 8000
+
+#Eureka
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://uname:passwd@localhost:8761/eureka
